@@ -1,6 +1,6 @@
 # NestJS Orchestrator
 
-NestJS Orchestrator is a lightweight command-line tool that simplifies the generation of modules, services, controllers, and entities in NestJS using a single directory to organize features in a more modular way.
+NestJS Orchestrator is a lightweight command-line tool that simplifies the generation of modules, services, controllers, and entities in NestJS using a single directory to organize features in a more modular way. It can be installed globally and used as a standalone command, or installed as a dependency in a NestJS project and run with `npm run orchestrator`.
 
 ## Prerequisites
 
@@ -22,16 +22,42 @@ npm install -g @nestjs/cli
 
 ## Installation
 
+### Global Installation
+
 Install it globally using npm:
 
 ```bash
 npm install -g nestjs-orchestrator
 ```
 
+### Local Installation
+
+Install it as a dependency in your project:
+
+```bash
+npm install --save nestjs-orchestrator
+```
+
+Then, add a script in your `package.json` file to run the orchestrator:
+
+```json
+"scripts": {
+  "orchestrator": "orchestrator"
+}
+```
+
 ## Usage
+
+### Global Usage
 
 ```bash
 orchestrator [option] [name]
+```
+
+### Local Usage
+
+```bash
+npm run orchestrator -- [option] [name]
 ```
 
 ### Options
