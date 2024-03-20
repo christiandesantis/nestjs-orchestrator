@@ -32,10 +32,10 @@ npm install -g nestjs-orchestrator
 
 ### Local Installation
 
-Install it as a dependency in your project:
+Install it as a development dependency in your project:
 
 ```bash
-npm install --save nestjs-orchestrator
+npm install --save-dev nestjs-orchestrator
 ```
 
 Then, add a script in your `package.json` file to run the orchestrator:

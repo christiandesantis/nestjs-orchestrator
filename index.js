@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const args = process.argv.slice(2);
 const cmd = 'nest';
 
-module.exports = function orchestrator() {
+function orchestrator() {
   const displayHelp = () => {
     console.log(`
       Usage: nestjs-orchestrator [option] [argument]
@@ -82,4 +82,12 @@ module.exports = function orchestrator() {
 
     fs.writeFileSync(entitiesFilePath, entitiesFileContent);
   }
+}
+
+if (require.main === module) {
+  // The script is being run directly, call the function with process arguments
+  orchestrator(process.argv.slice(2));
+} else {
+  // The script is being required as a module, export the function
+  module.exports = orchestrator;
 }
