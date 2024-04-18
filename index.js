@@ -35,8 +35,17 @@ function orchestrator() {
   }
 
   if (!hasFlag || args.includes('-m') || args.includes('--module')) {
+    // Execute the command to generate the module
     execSync(`${cmd} g module ${nameArg}`, { stdio: 'inherit' });
+    // Update the generated module file
+    const moduleFilePath = path.join('src', nameArg, `${nameArg}.module.ts`);
+    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
+    // Add a comma after the controllers array
+    moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
+    fs.writeFileSync(moduleFilePath, moduleFileContent);
+    // Execute the command to generate the service
     execSync(`${cmd} g service ${nameArg}/service`, { stdio: 'inherit' });
+    // Execute the command to generate the controller
     execSync(`${cmd} g controller ${nameArg}/controller`, { stdio: 'inherit' });
   }
 
@@ -49,21 +58,19 @@ function orchestrator() {
 
     // Generate entity file
     const entityFilePath = path.join('src', entityName, `${entityName}.entity.ts`);
-    const entityFileContent = `
-      import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+    const entityFileContent = `import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-      @Entity()
-      export class ${entityNameCapitalized} {
-        @PrimaryGeneratedColumn()
-        id: number;
+@Entity()
+export class ${entityNameCapitalized} {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-        @Column()
-        name: string;
+  @Column()
+  name: string;
 
-        @Column({ nullable: true })
-        description: string;
-      }
-    `;
+  @Column({ nullable: true })
+  description: string;
+}`;
     fs.writeFileSync(entityFilePath, entityFileContent);
 
     // Update module.ts

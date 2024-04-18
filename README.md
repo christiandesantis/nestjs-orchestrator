@@ -5,13 +5,6 @@ NestJS Orchestrator is a lightweight command-line tool that simplifies the gener
 ## Prerequisites
 
 - This tool is designed to be run at the root of a NestJS project. Please ensure you're in the root directory of your project before running the `orchestrator` command.
-- For generating entities with this package, the entities array used for TypeORM needs to be located at `src/config/typeorm/entities.ts`. Here's an example of the syntax should be used in this file:
-
-```typescript
-import { Item } from '../../item/item.entity';
-
-export const entities = [Item];
-```
 
 - Please ensure this file and structure is in place before using the orchestrator command to generate entities.
 - While not necessary, we recommend having nest-cli installed globally for the best performance of the tool. You can install it using the following command:
