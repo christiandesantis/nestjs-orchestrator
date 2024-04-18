@@ -74,7 +74,7 @@ function orchestrator() {
     const moduleFilePath = path.join('src', nameArg, `${nameArg}.module.ts`);
     let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
     // Add a comma after the controllers array
-    moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
+    moduleFileContent = moduleFileContent.replace(/(controllers: \[[^\]]*\])/g, `$1,`);
   
     // Update the import paths for the service and controller
     moduleFileContent = moduleFileContent.replace(
