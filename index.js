@@ -15,22 +15,35 @@ function orchestrator() {
       -e, --entity [name]   Generate an entity with the given name
       -a, --all    [name]   Generate a module, service, controller and entity with the given name
       -h, --help            Display this help message
+      -v, --version         Display the version of this package
 
       If no option is provided, it will assume -a or --all, generating a module, service, controller and entity with the given name.
     `);
     process.exit(1);
   };
 
-  const flags = ['-m', '--module', '-e', '--entity', '-a', '--all', '-h', '--help'];
+  const displayVersion = () => {
+    const packageJson = require('./package.json');
+    console.log(`Version: ${packageJson.version}`);
+    process.exit(1);
+  };
+
+  const flags = ['-m', '--module', '-e', '--entity', '-a', '--all', '-h', '--help', '-v', '--version'];
+  // Check if any of the arguments are flags
   const hasFlag = args.some(arg => flags.includes(arg));
 
   if (args.length === 0 || args.includes('-h') || args.includes('--help')) {
     displayHelp();
   }
 
+  if (args.includes('-v') || args.includes('--version')) {
+    displayVersion();
+  }
+
   // Get the name argument
   const nameArg = args.find(arg => !flags.includes(arg));
 
+  // Check if the name argument is provided
   if (!nameArg && !args.includes('-h') && !args.includes('--help')) {
     console.error('Error: Name argument is required.');
     displayHelp();
@@ -50,20 +63,20 @@ function orchestrator() {
     fs.mkdirSync(path.join('src', nameArg, 'service'), { recursive: true });
     fs.mkdirSync(path.join('src', nameArg, 'controller'), { recursive: true });
 
-    // Move the service and controller files to their respective directories
+    // Move the service and service.spec files to their respective directory
     fs.renameSync(
       path.join('src', nameArg, `${nameArg}.service.ts`),
       path.join('src', nameArg, 'service', `${nameArg}.service.ts`)
     );
     fs.renameSync(
-      path.join('src', nameArg, `${nameArg}.controller.ts`),
-      path.join('src', nameArg, 'controller', `${nameArg}.controller.ts`)
-    );
-
-    // Move the service and controller spec files to their respective directories
-    fs.renameSync(
       path.join('src', nameArg, `${nameArg}.service.spec.ts`),
       path.join('src', nameArg, 'service', `${nameArg}.service.spec.ts`)
+    );
+
+    // Move the controller and controller.spec files to their respective directory
+    fs.renameSync(
+      path.join('src', nameArg, `${nameArg}.controller.ts`),
+      path.join('src', nameArg, 'controller', `${nameArg}.controller.ts`)
     );
     fs.renameSync(
       path.join('src', nameArg, `${nameArg}.controller.spec.ts`),
@@ -86,6 +99,7 @@ function orchestrator() {
       `'./controller/${nameArg}.controller';`
     );
     
+    // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
 
@@ -109,6 +123,7 @@ export class ${entityNameCapitalized} {
   description: string;
 }
 `;
+    // Write entity file
     fs.writeFileSync(entityFilePath, entityFileContent);
 
     // Update module.ts
@@ -129,7 +144,7 @@ export class ${entityNameCapitalized} {
       // If the imports array is not empty, add the entity
       moduleFileContent = moduleFileContent.replace(/imports: \[(.*)\],/, `imports: [$1, TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
     }
-
+    // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
 }

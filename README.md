@@ -28,7 +28,7 @@ npm install -g nestjs-orchestrator
 Install it as a development dependency in your project:
 
 ```bash
-npm install --save-dev nestjs-orchestrator
+npm install -D nestjs-orchestrator
 ```
 
 Then, add a script in your `package.json` file to run the orchestrator:
@@ -59,6 +59,7 @@ npm run orchestrator -- [option] [name]
 - `-m, --module [name]`   Generate a module, service, and controller with the given name
 - `-e, --entity [name]`   Generate an entity with the given name
 - `-h, --help`            Display the help message
+- `-v, --version`         Display the version of this package
 
 If no option is provided, it will assume `-a` or `--all`, generating a module, service, controller and entity with the given name.
 
