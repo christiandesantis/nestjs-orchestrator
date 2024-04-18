@@ -77,12 +77,12 @@ function orchestrator() {
 
     // Update the import paths for the service and controller
     moduleFileContent = moduleFileContent.replace(
-      `./${nameArg}.service`,
-      `./service/${nameArg}.service`
+      `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Service } from './${nameArg}.service';`,
+      `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Service } from './service/${nameArg}.service';`
     );
     moduleFileContent = moduleFileContent.replace(
-      `./${nameArg}.controller`,
-      `./controller/${nameArg}.controller`
+      `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Controller } from './${nameArg}.controller';`,
+      `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Controller } from './controller/${nameArg}.controller';`
     );
     
     fs.writeFileSync(moduleFilePath, moduleFileContent);
