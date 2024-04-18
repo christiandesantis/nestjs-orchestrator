@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 const { execSync } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 const args = process.argv.slice(2);
 const cmd = 'npx nest';
 
@@ -52,9 +54,6 @@ function orchestrator() {
   const entityName = nameArg;
   if (!hasFlag || args.includes('-e') || args.includes('--entity') || args.includes('-a') || args.includes('--all')) {
     const entityNameCapitalized = entityName.charAt(0).toUpperCase() + entityName.slice(1);
-
-    const fs = require('fs');
-    const path = require('path');
 
     // Generate entity file
     const entityFilePath = path.join('src', entityName, `${entityName}.entity.ts`);
