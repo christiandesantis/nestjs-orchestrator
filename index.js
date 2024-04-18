@@ -74,7 +74,7 @@ function orchestrator() {
       path.join('src', nameArg, `${nameArg}.controller.spec.ts`),
       path.join('src', nameArg, 'controller', `${nameArg}.controller.spec.ts`)
     );
-
+    console.log(moduleFileContent)
     // Update the import paths for the service and controller
     moduleFileContent = moduleFileContent.replace(
       `'./${nameArg}.service';`,
@@ -84,6 +84,7 @@ function orchestrator() {
       `'./${nameArg}.controller';`,
       `'./controller/${nameArg}.controller';`
     );
+    console.log(moduleFileContent)
     
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
