@@ -20,12 +20,12 @@ function orchestrator() {
 
       If no option is provided, it will assume -a or --all, generating a module, service, controller and entity with the given name.
     `);
-    process.exit(1);
+    process.exit(0);
   };
 
   const displayVersion = () => {
     console.log(`Version: ${packageJson.version}`);
-    process.exit(1);
+    process.exit(0);
   };
 
   const flags = ['-m', '--module', '-e', '--entity', '-a', '--all', '-h', '--help', '-v', '--version'];
