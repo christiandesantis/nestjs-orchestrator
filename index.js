@@ -86,7 +86,8 @@ function orchestrator() {
 
     // // Add a comma after the controllers array
     // moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
-    // fs.writeFileSync(moduleFilePath, moduleFileContent);
+    
+    fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
 
   const entityName = nameArg;
