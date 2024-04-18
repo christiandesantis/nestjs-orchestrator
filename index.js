@@ -36,8 +36,8 @@ function orchestrator() {
 
   if (!hasFlag || args.includes('-m') || args.includes('--module')) {
     execSync(`${cmd} g module ${nameArg}`, { stdio: 'inherit' });
-    execSync(`${cmd} g service ${nameArg}`, { stdio: 'inherit' });
-    execSync(`${cmd} g controller ${nameArg}`, { stdio: 'inherit' });
+    execSync(`${cmd} g service ${nameArg}/service`, { stdio: 'inherit' });
+    execSync(`${cmd} g controller ${nameArg}/controller`, { stdio: 'inherit' });
   }
 
   const entityName = nameArg;
