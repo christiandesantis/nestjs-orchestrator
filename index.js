@@ -23,8 +23,9 @@ function orchestrator() {
   };
 
   const displayVersion = () => {
-    const packageJson = require(path.resolve(process.cwd(), './package.json'));
-    console.log(`Version: ${packageJson.version}`);
+    const packageName = require(path.resolve(__dirname, './package.json')).name;
+    const version = execSync(`npm show ${packageName} version`, { encoding: 'utf8' });
+    console.log(`Version: ${version}`);
     process.exit(1);
   };
 
