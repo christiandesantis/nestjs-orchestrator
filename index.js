@@ -39,15 +39,10 @@ function orchestrator() {
   if (!hasFlag || args.includes('-m') || args.includes('--module')) {
     // Execute the command to generate the module
     execSync(`${cmd} g module ${nameArg}`, { stdio: 'inherit' });
-    // Update the generated module file
-    const moduleFilePath = path.join('src', nameArg, `${nameArg}.module.ts`);
-    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
-    // Add a comma after the controllers array
-    // moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
-    // fs.writeFileSync(moduleFilePath, moduleFileContent);
   
     // Execute the command to generate the service
     execSync(`${cmd} g service ${nameArg}`, { stdio: 'inherit' });
+
     // Execute the command to generate the controller
     execSync(`${cmd} g controller ${nameArg}`, { stdio: 'inherit' });
 
@@ -74,7 +69,14 @@ function orchestrator() {
       path.join('src', nameArg, `${nameArg}.controller.spec.ts`),
       path.join('src', nameArg, 'controller', `${nameArg}.controller.spec.ts`)
     );
-    console.log(moduleFileContent)
+
+    // Update the generated module file
+    const moduleFilePath = path.join('src', nameArg, `${nameArg}.module.ts`);
+    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
+    // Add a comma after the controllers array
+    // moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
+    // fs.writeFileSync(moduleFilePath, moduleFileContent);
+  
     // Update the import paths for the service and controller
     moduleFileContent = moduleFileContent.replace(
       `'./${nameArg}.service';`,
@@ -84,7 +86,6 @@ function orchestrator() {
       `'./${nameArg}.controller';`,
       `'./controller/${nameArg}.controller';`
     );
-    console.log(moduleFileContent)
     
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
