@@ -46,9 +46,47 @@ function orchestrator() {
     moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
     fs.writeFileSync(moduleFilePath, moduleFileContent);
     // Execute the command to generate the service
-    execSync(`${cmd} g service ${nameArg}/service/${nameArg}`, { stdio: 'inherit' });
+    execSync(`${cmd} g service ${nameArg}`, { stdio: 'inherit' });
     // Execute the command to generate the controller
-    execSync(`${cmd} g controller ${nameArg}/controller/${nameArg}`, { stdio: 'inherit' });
+    execSync(`${cmd} g controller ${nameArg}`, { stdio: 'inherit' });
+
+    // Create the service and controller directories
+    fs.mkdirSync(path.join('src', nameArg, 'service'), { recursive: true });
+    fs.mkdirSync(path.join('src', nameArg, 'controller'), { recursive: true });
+
+    // Move the service and controller files to their respective directories
+    fs.renameSync(
+      path.join('src', nameArg, `${nameArg}.service.ts`),
+      path.join('src', nameArg, 'service', `${nameArg}.service.ts`)
+    );
+    fs.renameSync(
+      path.join('src', nameArg, `${nameArg}.controller.ts`),
+      path.join('src', nameArg, 'controller', `${nameArg}.controller.ts`)
+    );
+
+    // Move the service and controller spec files to their respective directories
+    fs.renameSync(
+      path.join('src', nameArg, `${nameArg}.service.spec.ts`),
+      path.join('src', nameArg, 'service', `${nameArg}.service.spec.ts`)
+    );
+    fs.renameSync(
+      path.join('src', nameArg, `${nameArg}.controller.spec.ts`),
+      path.join('src', nameArg, 'controller', `${nameArg}.controller.spec.ts`)
+    );
+
+    // Update the import paths for the service and controller
+    moduleFileContent = moduleFileContent.replace(
+      `./${nameArg}.service`,
+      `./service/${nameArg}.service`
+    );
+    moduleFileContent = moduleFileContent.replace(
+      `./${nameArg}.controller`,
+      `./controller/${nameArg}.controller`
+    );
+
+    // Add a comma after the controllers array
+    moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
+    fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
 
   const entityName = nameArg;
