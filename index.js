@@ -3,7 +3,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const packageJson = require(path.resolve(require.main.path, './package.json'));
+const packageJson = require(path.resolve(path.dirname(__filename), './package.json'));
 const args = process.argv.slice(2);
 const cmd = 'npx nest';
 
