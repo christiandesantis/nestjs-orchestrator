@@ -43,8 +43,9 @@ function orchestrator() {
     const moduleFilePath = path.join('src', nameArg, `${nameArg}.module.ts`);
     let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
     // Add a comma after the controllers array
-    moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
-    fs.writeFileSync(moduleFilePath, moduleFileContent);
+    // moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
+    // fs.writeFileSync(moduleFilePath, moduleFileContent);
+  
     // Execute the command to generate the service
     execSync(`${cmd} g service ${nameArg}`, { stdio: 'inherit' });
     // Execute the command to generate the controller
@@ -83,9 +84,6 @@ function orchestrator() {
       `./${nameArg}.controller`,
       `./controller/${nameArg}.controller`
     );
-
-    // // Add a comma after the controllers array
-    // moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
     
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
