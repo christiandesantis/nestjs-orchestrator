@@ -3,6 +3,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const packageJson = require(path.resolve(require.main.path, './package.json'));
 const args = process.argv.slice(2);
 const cmd = 'npx nest';
 
@@ -23,9 +24,7 @@ function orchestrator() {
   };
 
   const displayVersion = () => {
-    const packageName = require(path.resolve(__dirname, './package.json')).name;
-    const version = execSync(`npm show ${packageName} version`, { encoding: 'utf8' });
-    console.log(`Version: ${version}`);
+    console.log(`Version: ${packageJson.version}`);
     process.exit(1);
   };
 
