@@ -2,7 +2,7 @@
 
 const { execSync } = require('child_process');
 const args = process.argv.slice(2);
-const cmd = 'nest';
+const cmd = 'npx nest';
 
 function orchestrator() {
   const displayHelp = () => {
@@ -66,21 +66,26 @@ function orchestrator() {
     `;
     fs.writeFileSync(entityFilePath, entityFileContent);
 
-    // Update entities.ts
-    const entitiesFilePath = path.join('src', 'config', 'typeorm', 'entities.ts');
-    let entitiesFileContent = fs.readFileSync(entitiesFilePath, 'utf8');
+    // Update module.ts
+    const moduleFilePath = path.join('src', entityName, `${entityName}.module.ts`);
+    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
 
-    // Add import statement
-    entitiesFileContent = `import { ${entityNameCapitalized} } from '../../${entityName}/${entityName}.entity';\n` + entitiesFileContent;
+    // Add import statements
+    moduleFileContent = `import { ${entityNameCapitalized} } from './${entityName}.entity';\nimport { TypeOrmModule } from '@nestjs/typeorm';\n` + moduleFileContent;
 
-    // Add entity to entities array
-    if (entitiesFileContent.includes('export const entities = [];')) {
-      entitiesFileContent = entitiesFileContent.replace('export const entities = [];', `export const entities = [${entityNameCapitalized}];`);
+    // Add entity to TypeOrmModule.forFeature in imports array
+    if (!moduleFileContent.includes('imports:')) {
+      // If there's no imports array, add it
+      moduleFileContent = moduleFileContent.replace('@Module({', `@Module({\n  imports: [TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
+    } else if (moduleFileContent.includes('imports: [],')) {
+      // If the imports array is empty, add the entity
+      moduleFileContent = moduleFileContent.replace('imports: [],', `imports: [TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
     } else {
-      entitiesFileContent = entitiesFileContent.replace(/export const entities = \[(.*)\];/, `export const entities = [$1, ${entityNameCapitalized}];`);
+      // If the imports array is not empty, add the entity
+      moduleFileContent = moduleFileContent.replace(/imports: \[(.*)\],/, `imports: [$1, TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
     }
 
-    fs.writeFileSync(entitiesFilePath, entitiesFileContent);
+    fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
 }
 
