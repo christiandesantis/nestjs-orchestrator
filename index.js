@@ -23,7 +23,7 @@ function orchestrator() {
   };
 
   const displayVersion = () => {
-    const packageJson = require('./package.json');
+    const packageJson = require(path.resolve(__dirname, './package.json'));
     console.log(`Version: ${packageJson.version}`);
     process.exit(1);
   };
