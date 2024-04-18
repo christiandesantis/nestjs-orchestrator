@@ -76,16 +76,16 @@ function orchestrator() {
     );
 
     // Update the import paths for the service and controller
-    // moduleFileContent = moduleFileContent.replace(
-    //   `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Service } from './${nameArg}.service';`,
-    //   `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Service } from './service/${nameArg}.service';`
-    // );
-    // moduleFileContent = moduleFileContent.replace(
-    //   `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Controller } from './${nameArg}.controller';`,
-    //   `import { ${nameArg.charAt(0).toUpperCase() + nameArg.slice(1)}Controller } from './controller/${nameArg}.controller';`
-    // );
+    moduleFileContent = moduleFileContent.replace(
+      `'./${nameArg}.service';`,
+      `'./service/${nameArg}.service';`
+    );
+    moduleFileContent = moduleFileContent.replace(
+      `'./${nameArg}.controller';`,
+      `'./controller/${nameArg}.controller';`
+    );
     
-    // fs.writeFileSync(moduleFilePath, moduleFileContent);
+    fs.writeFileSync(moduleFilePath, moduleFileContent);
   }
 
   const entityName = nameArg;
@@ -106,12 +106,12 @@ export class ${entityNameCapitalized} {
 
   @Column({ nullable: true })
   description: string;
-
-}`;
+}
+`;
     fs.writeFileSync(entityFilePath, entityFileContent);
 
     // Update module.ts
-    const moduleFilePath = path.join('src', entityName, `${entityName}.module.ts`);
+    const moduleFilePath = path.join('src', nameArg, `${nameArg}.module.ts`);
     let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
 
     // Add import statements
