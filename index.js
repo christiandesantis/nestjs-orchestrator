@@ -44,9 +44,9 @@ function orchestrator() {
     moduleFileContent = moduleFileContent.replace('controllers: [', 'controllers: [,');
     fs.writeFileSync(moduleFilePath, moduleFileContent);
     // Execute the command to generate the service
-    execSync(`${cmd} g service ${nameArg}/service`, { stdio: 'inherit' });
+    execSync(`${cmd} g service ${nameArg}/service/${nameArg}`, { stdio: 'inherit' });
     // Execute the command to generate the controller
-    execSync(`${cmd} g controller ${nameArg}/controller`, { stdio: 'inherit' });
+    execSync(`${cmd} g controller ${nameArg}/controller/${nameArg}`, { stdio: 'inherit' });
   }
 
   const entityName = nameArg;
