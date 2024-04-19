@@ -17,7 +17,7 @@ const Module = {
     // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   },
-  updateServicePath: function(name, path = `'./service/${name}.service';`) {
+  updateServicePath: function(name, newPath = `'./service/${name}.service';`) {
     // Get the module file path
     const moduleFilePath = path.join('src', name, `${name}.module.ts`);
     // Read the module file content
@@ -25,7 +25,7 @@ const Module = {
     // Update the service import path
     moduleFileContent = moduleFileContent.replace(
       `'./${name}.service';`,
-      path || `'./service/${name}.service';`
+      newPath || `'./service/${name}.service';`
     );
     // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
