@@ -1,102 +1,81 @@
 #!/usr/bin/env node
 
-const { execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const packageJson = require(path.resolve(path.dirname(__filename), './package.json'));
 const { Command } = require('commander');
 const program = new Command();
+const packageJson = require(path.resolve(path.dirname(__filename), './package.json'));
+const Module = require('./module');
+const Controller = require('./controller');
+const Service = require('./service');
+const Entity = require('./entity');
 
-const cmd = 'npx nest';
+const nest = 'npx nest';
 
 program
   .version(packageJson.version)
-  .description('A CLI tool for orchestrating NestJS projects');
+  .description('A CLI tool for generating NestJS modules, services, controllers, and typeorm entities')
+  .option('-m, --module <name>', 'Generate a module with the given name')
+  .option('-c, --controller <name>', 'Generate a module and controller with the given name')
+  .option('-s, --service <name>', 'Generate a module and service with the given name')
+  .option('-e, --entity <name>', 'Generate a typeorm entity with the given name')
+  .option('-a, --all <name>', 'Generate a module, controller, service and entity with the given name')
+  .helpOption('-h, --help', 'Display this help message')
+  .addHelpText('after', '\nIf no option is provided, it will generate a module, controller and service with the given name.')
+  .parse(process.argv);
 
-program
-  .command('module <name>')
-  .description('Generate a module, service, and controller with the given name')
-  .action((name) => {
-    execSync(`${cmd} g module ${name}`, { stdio: 'inherit' });
-    execSync(`${cmd} g service ${name}`, { stdio: 'inherit' });
-    execSync(`${cmd} g controller ${name}`, { stdio: 'inherit' });
+const options = program.opts();
 
-    fs.mkdirSync(path.join('src', name, 'service'), { recursive: true });
-    fs.mkdirSync(path.join('src', name, 'controller'), { recursive: true });
-
-    fs.renameSync(
-      path.join('src', name, `${name}.service.ts`),
-      path.join('src', name, 'service', `${name}.service.ts`)
-    );
-    fs.renameSync(
-      path.join('src', name, `${name}.service.spec.ts`),
-      path.join('src', name, 'service', `${name}.service.spec.ts`)
-    );
-
-    fs.renameSync(
-      path.join('src', name, `${name}.controller.ts`),
-      path.join('src', name, 'controller', `${name}.controller.ts`)
-    );
-    fs.renameSync(
-      path.join('src', name, `${name}.controller.spec.ts`),
-      path.join('src', name, 'controller', `${name}.controller.spec.ts`)
-    );
-
-    const moduleFilePath = path.join('src', name, `${name}.module.ts`);
-    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
-    moduleFileContent = moduleFileContent.replace(/(controllers: \[[^\]]*\])/g, `$1,`);
-    moduleFileContent = moduleFileContent.replace(
-      `'./${name}.service';`,
-      `'./service/${name}.service';`
-    );
-    moduleFileContent = moduleFileContent.replace(
-      `'./${name}.controller';`,
-      `'./controller/${name}.controller';`
-    );
-    fs.writeFileSync(moduleFilePath, moduleFileContent);
-  });
-
-program
-  .command('entity <name>')
-  .description('Generate an entity with the given name')
-  .action((name) => {
-    const entityNameCapitalized = name.charAt(0).toUpperCase() + name.slice(1);
-    const entityFilePath = path.join('src', name, `${name}.entity.ts`);
-    const entityFileContent = `import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-
-@Entity()
-export class ${entityNameCapitalized} {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  name: string;
-
-  @Column({ nullable: true })
-  description: string;
+// Module generation code
+if (options.module) {
+  const name = options.module;
+  Module.generate(nest, name);
 }
-`;
-    fs.writeFileSync(entityFilePath, entityFileContent);
 
-    const moduleFilePath = path.join('src', name, `${name}.module.ts`);
-    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
-    moduleFileContent = `import { ${entityNameCapitalized} } from './${name}.entity';\nimport { TypeOrmModule } from '@nestjs/typeorm';\n` + moduleFileContent;
-    if (!moduleFileContent.includes('imports:')) {
-      moduleFileContent = moduleFileContent.replace('@Module({', `@Module({\n  imports: [TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
-    } else if (moduleFileContent.includes('imports: [],')) {
-      moduleFileContent = moduleFileContent.replace('imports: [],', `imports: [TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
-    } else {
-      moduleFileContent = moduleFileContent.replace(/imports: \[(.*)\],/, `imports: [$1, TypeOrmModule.forFeature([${entityNameCapitalized}])],`);
-    }
-    fs.writeFileSync(moduleFilePath, moduleFileContent);
-  });
+// Controller generation code
+if (options.controller) {
+  const name = options.controller;
+  Module.generate(nest, name);
+  Controller.generate(nest, name);
+  Controller.relocate(name);
+  Module.updateControllerPath(name, `'./controller/${name}.controller';`);
+}
 
-program
-  .command('all <name>')
-  .description('Generate a module, service, controller and entity with the given name')
-  .action((name) => {
-    program.emit('command:module', name);
-    program.emit('command:entity', name);
-  });
+// Service generation code
+if (options.service) {
+  const name = options.service;
+  Module.generate(nest, name);
+  Service.generate(nest, name);
+  Service.relocate(name);
+  Module.updateServicePath(name, `'./service/${name}.service';`);
+}
 
-program.parse(process.argv);
+// Entity generation code
+if (options.entity) {
+  const name = options.entity;
+  Entity.generate(nest, name);
+}
+
+// All-in-one generation code here
+if (options.all) {
+  const name = options.all;
+  Module.generate(nest, name);
+  Controller.generate(nest, name);
+  Controller.relocate(name);
+  Module.updateControllerPath(name, `'./controller/${name}.controller';`);
+  Service.generate(nest, name);
+  Service.relocate(name);
+  Module.updateServicePath(name, `'./service/${name}.service';`);
+  Entity.generate(nest, name);
+  Module.updateEntity(name);
+}
+
+// If no option is provided generates a module, service and controller with the given name.
+if (!options.module && !options.controller && !options.service && !options.entity && !options.all) {
+  const name = program.args[0];
+  Module.generate(nest, name);
+  Controller.generate(nest, name);
+  Controller.relocate(name);
+  Module.updateControllerPath(name, `'./controller/${name}.controller';`);
+  Service.generate(nest, name);
+  Service.relocate(name);
+  Module.updateServicePath(name, `'./service/${name}.service';`);
+}
