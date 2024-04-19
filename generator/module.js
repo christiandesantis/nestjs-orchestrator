@@ -12,8 +12,8 @@ const Module = {
     const moduleFilePath = path.join('src', name, `${name}.module.ts`);
     // Read the module file content
     let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
-    // Add a comma after the controllers array
-    moduleFileContent = moduleFileContent.replace(/(controllers: \[[^\]]*\])/g, `$1,`);
+    // Add a comma after the providers array
+    moduleFileContent = moduleFileContent.replace(/(providers: \[[^\]]*\])/g, `$1,`);
     // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   },
