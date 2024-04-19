@@ -52,10 +52,10 @@ if (options.service) {
 // Entity generation code
 if (options.entity) {
   const name = options.entity;
-  Entity.generate(nest, name);
+  Entity.generate(name);
 }
 
-// All-in-one generation code here
+// All-in-one generation code
 if (options.all) {
   const name = options.all;
   Module.generate(nest, name);
@@ -65,7 +65,7 @@ if (options.all) {
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  Entity.generate(nest, name);
+  Entity.generate(name);
   Module.updateEntity(name);
 }
 
