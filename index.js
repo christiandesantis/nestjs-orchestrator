@@ -4,10 +4,10 @@ const { Command } = require('commander');
 const program = new Command();
 const path = require('path');
 const packageJson = require(path.resolve(path.dirname(__filename), './package.json'));
-const Module = require('./module');
-const Controller = require('./controller');
-const Service = require('./service');
-const Entity = require('./entity');
+const Module = require('./generator/module');
+const Controller = require('./generator/controller');
+const Service = require('./generator/service');
+const Entity = require('./generator/entity');
 
 const nest = 'npx nest';
 
