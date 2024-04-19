@@ -30,7 +30,7 @@ const Module = {
     // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
   },
-  updateControllerPath: function(name, path = `'./controller/${name}.controller';`) {
+  updateControllerPath: function(name, newPath = `'./controller/${name}.controller';`) {
     // Get the module file path
     const moduleFilePath = path.join('src', name, `${name}.module.ts`);
     // Read the module file content
@@ -38,7 +38,7 @@ const Module = {
     // Update the controller import path
     moduleFileContent = moduleFileContent.replace(
       `'./${name}.controller';`,
-      path || `'./controller/${name}.controller';`
+      newPath || `'./controller/${name}.controller';`
     );
     // Save the updated module file
     fs.writeFileSync(moduleFilePath, moduleFileContent);
