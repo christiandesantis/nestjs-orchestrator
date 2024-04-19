@@ -48,7 +48,7 @@ if (options.service) {
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  Module.formatProviders(name);
+  // Module.formatProviders(name);
 }
 
 // Entity generation code
@@ -68,7 +68,7 @@ if (options.all) {
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  Module.formatProviders(name);
+  // Module.formatProviders(name);
   Entity.generate(name);
   Module.updateEntity(name);
 }
@@ -84,5 +84,5 @@ if (!options.module && !options.controller && !options.service && !options.entit
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  Module.formatProviders(name);
+  // Module.formatProviders(name);
 }
