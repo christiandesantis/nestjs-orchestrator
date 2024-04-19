@@ -2,6 +2,7 @@
 
 const { Command } = require('commander');
 const program = new Command();
+const path = require('path');
 const packageJson = require(path.resolve(path.dirname(__filename), './package.json'));
 const Module = require('./module');
 const Controller = require('./controller');
