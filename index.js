@@ -55,6 +55,7 @@ if (options.service) {
 if (options.entity) {
   const name = options.entity;
   Entity.generate(name);
+  Module.updateEntity(name);
 }
 
 // All-in-one generation code

@@ -68,6 +68,10 @@ const Module = {
   
     // Get the module file path
     const moduleFilePath = path.join('src', name, `${name}.module.ts`);
+
+    // Validate if the module exists
+    if (!fs.existsSync(moduleFilePath)) return
+
     // Read the module file content
     let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
 
