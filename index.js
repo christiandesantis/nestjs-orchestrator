@@ -13,12 +13,12 @@ const nest = 'npx nest';
 
 program
   .version(packageJson.version)
-  .description('A CLI tool for generating NestJS modules, services, controllers, and typeorm entities')
+  .description('A CLI tool for generating NestJS modules, services, controllers, and typeorm entities in NestJS using a single directory to organize features in a more modular way.')
   .option('-m, --module <name>', 'Generate a module with the given name')
   .option('-c, --controller <name>', 'Generate a module and controller with the given name')
   .option('-s, --service <name>', 'Generate a module and service with the given name')
   .option('-e, --entity <name>', 'Generate a typeorm entity with the given name')
-  .option('-a, --all <name>', 'Generate a module, controller, service and entity with the given name')
+  .option('-a, --all <name>', 'Generate a module, controller, service and typeorm entity with the given name')
   .helpOption('-h, --help', 'Display this help message')
   .addHelpText('after', '\nIf no option is provided, it will generate a module, controller and service with the given name.')
   .parse(process.argv);
@@ -48,7 +48,6 @@ if (options.service) {
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  // Module.formatProviders(name);
 }
 
 // Entity generation code
@@ -69,7 +68,6 @@ if (options.all) {
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  // Module.formatProviders(name);
   Entity.generate(name);
   Module.updateEntity(name);
 }
@@ -85,5 +83,4 @@ if (!options.module && !options.controller && !options.service && !options.entit
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
-  // Module.formatProviders(name);
 }
