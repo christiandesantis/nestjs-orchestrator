@@ -4,6 +4,15 @@ const path = require('path');
 
 const Module = {
   generate: function(nest, name) {
+    // Get the module file path
+    const moduleFilePath = path.join('src', name, `${name}.module.ts`);
+
+    // Check if the module exists
+    if (fs.existsSync(moduleFilePath)) {
+      console.log(`Module ${name} already exists.`);
+      return
+    }
+
     // Execute the command to generate the module
     execSync(`${nest} g module ${name}`, { stdio: 'inherit' });
   },
