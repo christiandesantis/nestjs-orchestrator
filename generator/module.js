@@ -7,7 +7,17 @@ const Module = {
     // Execute the command to generate the module
     execSync(`${nest} g module ${name}`, { stdio: 'inherit' });
   },
-  format: function(name) {
+  formatControllers: function(name) {
+    // Get the module file path
+    const moduleFilePath = path.join('src', name, `${name}.module.ts`);
+    // Read the module file content
+    let moduleFileContent = fs.readFileSync(moduleFilePath, 'utf8');
+    // Add a comma after the providers array
+    moduleFileContent = moduleFileContent.replace(/(controllers: \[[^\]]*\])/g, `$1,`);
+    // Save the updated module file
+    fs.writeFileSync(moduleFilePath, moduleFileContent);
+  },
+  formatProviders: function(name) {
     // Get the module file path
     const moduleFilePath = path.join('src', name, `${name}.module.ts`);
     // Read the module file content

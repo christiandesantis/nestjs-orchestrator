@@ -38,6 +38,7 @@ if (options.controller) {
   Controller.generate(nest, name);
   Controller.relocate(name);
   Module.updateControllerPath(name, `'./controller/${name}.controller';`);
+  Module.formatControllers(name);
 }
 
 // Service generation code
@@ -47,6 +48,7 @@ if (options.service) {
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
+  Module.formatProviders(name);
 }
 
 // Entity generation code
@@ -62,9 +64,11 @@ if (options.all) {
   Controller.generate(nest, name);
   Controller.relocate(name);
   Module.updateControllerPath(name, `'./controller/${name}.controller';`);
+  Module.formatControllers(name);
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
+  Module.formatProviders(name);
   Entity.generate(name);
   Module.updateEntity(name);
 }
@@ -76,7 +80,9 @@ if (!options.module && !options.controller && !options.service && !options.entit
   Controller.generate(nest, name);
   Controller.relocate(name);
   Module.updateControllerPath(name, `'./controller/${name}.controller';`);
+  Module.formatControllers(name);
   Service.generate(nest, name);
   Service.relocate(name);
   Module.updateServicePath(name, `'./service/${name}.service';`);
+  Module.formatProviders(name);
 }
