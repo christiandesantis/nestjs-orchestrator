@@ -8,7 +8,8 @@ const Entity = {
     const entityNameCapitalized = entityName.charAt(0).toUpperCase() + entityName.slice(1);
 
     // Generate entity file
-    const entityFilePath = path.join('src', entityName, `${entityName}.entity.ts`);
+    const entityDirPath = path.join('src', entityName);
+    const entityFilePath = path.join(entityDirPath, `${entityName}.entity.ts`);
     const entityFileContent = `import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -23,6 +24,10 @@ export class ${entityNameCapitalized} {
   description: string;
 }
 `;
+    // Create the directory if it does not exist
+    if (!fs.existsSync(entityDirPath)) {
+      fs.mkdirSync(entityDirPath, { recursive: true });
+    }
     // Write entity file
     fs.writeFileSync(entityFilePath, entityFileContent);
   }
